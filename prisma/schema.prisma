@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Download {
+  id          String   @id @default(cuid())
+  url         String
+  platform    String
+  title       String?
+  customName  String?
+  format      String
+  quality     String?
+  status      String   @default("pending")
+  progress    Int      @default(0)
+  fileSize    String?
+  duration    String?
+  thumbnail   String?
+  filePath    String?
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Settings {
+  id              String   @id @default(cuid())
+  defaultQuality  String   @default("best")
+  defaultFormat   String   @default("mp4")
+  autoRename      Boolean  @default(true)
+  downloadPath    String   @default("/downloads")
+  darkMode        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
