@@ -1,0 +1,43 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getVideoInfo, detectPlatform } from '@/lib/ytdlp';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { url } = body;
+
+    if (!url) {
+      return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+    }
+
+    try {
+      new URL(url);
+    } catch {
+      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 });
+    }
+
+    const info = await getVideoInfo(url);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        title: info.title,
+        thumbnail: info.thumbnail,
+        duration: info.duration,
+        uploader: info.uploader,
+        description: info.description,
+        platform: info.platform,
+        formats: info.formats.map(f => ({
+          id: f.format_id,
+          label: `${f.quality}${f.resolution ? ` (${f.resolution})` : ''}`,
+          quality: f.quality,
+          type: f.vcodec !== 'none' ? 'video' : 'audio' as const
+        }))
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching video info:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch video info';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
