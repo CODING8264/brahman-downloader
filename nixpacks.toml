@@ -1,0 +1,9 @@
+# Install yt-dlp and ffmpeg
+[phases.setup]
+aptPkgs = ["...", "yt-dlp", "ffmpeg"]
+
+[phases.build]
+cmds = ["bun install", "bun run db:generate"]
+
+[start]
+cmd = "bun run db:push && bun run start"
