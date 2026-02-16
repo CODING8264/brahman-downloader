@@ -5,6 +5,8 @@ aptPkgs = ["yt-dlp", "ffmpeg"]
 commands = [
   "npm install --include=dev",
   "npm run db:generate",
+  "npm run migrate",
+  "npm run seed",
   "npm run build"
 ]
 
