@@ -157,7 +157,7 @@ export async function downloadMedia(
 
     args.push(url);
 
-    const proc = spawn('yt-dlp', args);
+    const proc = spawn(YTDLP_BIN, args);
     let lastLine = '';
     let filePath = '';
     let errorOutput = '';
