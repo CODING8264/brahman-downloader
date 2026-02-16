@@ -1,3 +1,4 @@
+const YTDLP_BIN = process.env.YTDLP_PATH || "yt-dlp";
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { writeFile, unlink, mkdir } from 'fs/promises';
