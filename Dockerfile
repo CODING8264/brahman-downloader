@@ -1,4 +1,4 @@
-# 1. Use official Node.js LTS image
+# 1. Use Node 20
 FROM node:20
 
 # 2. Set working directory
@@ -9,23 +9,27 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
     -o /usr/local/bin/yt-dlp \
     && chmod +x /usr/local/bin/yt-dlp
 
-# 4. Copy package.json and package-lock.json
+# 4. Copy package.json & package-lock.json first for caching
 COPY package*.json ./
 
 # 5. Install dependencies
 RUN npm install
 
-# 6. Generate Prisma client
+# 6. Copy Prisma schema and .env (if using DATABASE_URL)
+COPY prisma ./prisma
+COPY .env .env
+
+# 7. Generate Prisma client
 RUN npx prisma generate
 
-# 7. Copy the rest of your project
+# 8. Copy the rest of your project
 COPY . .
 
-# 8. Build Next.js app
+# 9. Build Next.js project
 RUN npm run build
 
-# 9. Expose port
+# 10. Expose port (default Railway port or your app port)
 EXPOSE 8080
 
-# 10. Start server
+# 11. Start the server
 CMD ["node", ".next/standalone/server.js"]
