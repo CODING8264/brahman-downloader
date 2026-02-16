@@ -480,8 +480,51 @@ export default function Home() {
                   <ScrollArea className="h-[500px] pr-4">
                     <div className="space-y-3">
                       {downloads.map((download) => (
-                        <motion.div
-                          key={download.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg hover:bg-muted transi
+  <motion.div
+    key={download.id}
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+  >
+    <div className="relative">
+      {download.thumbnail ? (
+        <img
+          src={download.thumbnail}
+          alt=""
+          className="w-20 h-14 object-cover rounded"
+        />
+      ) : (
+        <div className="w-20 h-14 bg-muted rounded flex items-center justify-center">
+          {download.format === "mp3" ? (
+            <Music className="w-6 h-6 text-muted-foreground" />
+          ) : (
+            <Video className="w-6 h-6 text-muted-foreground" />
+          )}
+        </div>
+      )}
+    </div>
+
+    <div className="flex-1 min-w-0">
+      <p className="font-medium truncate">
+        {download.title || download.url}
+      </p>
+      <div className="flex items-center gap-2 mt-1">
+        {getStatusIcon(download.status)}
+        <span className="text-sm text-muted-foreground">
+          {download.status}
+        </span>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-2">
+      <Badge variant="secondary">{download.format}</Badge>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => handleDelete(download.id)}
+      >
+        <Trash2 className="w-4 h-4 text-red-500" />
+      </Button>
+    </div>
+  </motion.div>
+))}
