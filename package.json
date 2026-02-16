@@ -8,8 +8,7 @@
     "start": "node .next/standalone/server.js",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
-  }
-},
+  },
   "dependencies": {
     "@prisma/client": "^6.11.1",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -33,12 +32,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-  "@tailwindcss/postcss": "^4",
-  "@types/node": "^20.11.0",
-  "@types/react": "^19",
-  "@types/react-dom": "^19",
-  "tailwindcss": "^4",
-  "tw-animate-css": "^1.3.5",
-  "typescript": "^5"
-}
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.11.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.5",
+    "typescript": "^5"
+  }
 }
