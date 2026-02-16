@@ -1,35 +1,31 @@
-# 1. Use Node 20
+# 1️⃣ Use official Node 20 image
 FROM node:20
 
-# 2. Set working directory
+# 2️⃣ Set working directory
 WORKDIR /app
 
-# 3. Install yt-dlp globally
+# 3️⃣ Install YT-DLP globally
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
     -o /usr/local/bin/yt-dlp \
     && chmod +x /usr/local/bin/yt-dlp
 
-# 4. Copy package.json & package-lock.json first for caching
+# 4️⃣ Copy package.json and package-lock.json first for caching
 COPY package*.json ./
 
-# 5. Install dependencies
+# 5️⃣ Install dependencies
 RUN npm install
 
-# 6. Copy Prisma schema and .env (if using DATABASE_URL)
-COPY prisma ./prisma
-COPY .env .env
-
-# 7. Generate Prisma client
-RUN npx prisma generate
-
-# 8. Copy the rest of your project
+# 6️⃣ Copy rest of the project
 COPY . .
 
-# 9. Build Next.js project
+# 7️⃣ Generate Prisma client (only if schema exists)
+RUN if [ -f prisma/schema.prisma ]; then npx prisma generate; fi
+
+# 8️⃣ Build Next.js app
 RUN npm run build
 
-# 10. Expose port (default Railway port or your app port)
-EXPOSE 8080
+# 9️⃣ Expose port (optional, Railway overrides with $PORT)
+EXPOSE 3000
 
-# 11. Start the server
-CMD ["node", ".next/standalone/server.js"]
+# 🔟 Start the server with dynamic port
+CMD ["sh", "-c", "PORT=${PORT:-3000} node .next/standalone/server.js"]
