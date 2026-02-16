@@ -5,13 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "scripts": {
-  "build": "next build",
-  "start": "node .next/standalone/server.js"
-}
+    "start": "node .next/standalone/server.js",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
-  },
+  }
+},
   "dependencies": {
     "@prisma/client": "^6.11.1",
     "@radix-ui/react-dialog": "^1.1.14",
