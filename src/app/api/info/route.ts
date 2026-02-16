@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getVideoInfo } from "@/lib/ytdlp";
+import { getVideoInfo, detectPlatform } from "@/lib/ytdlp";
 
-/**
- * Prevent Next.js from caching this route
- */
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
@@ -11,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { url } = body;
 
-    // 1️⃣ URL required
+    // 1️⃣ Validate URL
     if (!url) {
       return NextResponse.json(
         { error: "URL is required" },
@@ -19,7 +16,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2️⃣ Validate URL format
     try {
       new URL(url);
     } catch {
@@ -29,18 +25,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3️⃣ Fetch info using yt-dlp
+    // 2️⃣ Get info from yt-dlp
     const info = await getVideoInfo(url);
 
-    // 4️⃣ Safe formats parsing (VERY IMPORTANT)
-    const formats = (info.formats || []).map((f) => ({
-      id: f.format_id,
-      label: `${f.quality}${f.resolution ? ` (${f.resolution})` : ""}`,
-      quality: f.quality,
-      type: f.vcodec !== "none" ? ("video" as const) : ("audio" as const),
-    }));
+    if (!info) {
+      return NextResponse.json(
+        { error: "Failed to fetch video info" },
+        { status: 500 }
+      );
+    }
 
-    // 5️⃣ Return clean response
+    // 3️⃣ Detect platform safely
+    const platform = detectPlatform(url) || info.extractor || "unknown";
+
+    // 4️⃣ Safe formats handling
+    const formats = Array.isArray(info.formats)
+      ? info.formats.map((f: any) => ({
+          id: f.format_id,
+          label: `${f.format_note || f.ext || "unknown"}${
+            f.resolution ? ` (${f.resolution})` : ""
+          }`,
+          quality: f.format_note || f.quality || "unknown",
+          type: f.vcodec && f.vcodec !== "none" ? "video" : "audio",
+        }))
+      : [];
+
     return NextResponse.json({
       success: true,
       data: {
@@ -49,20 +58,21 @@ export async function POST(request: NextRequest) {
         duration: info.duration,
         uploader: info.uploader,
         description: info.description,
-        platform: info.platform,
+        platform,
         formats,
       },
     });
+
   } catch (error) {
     console.error("Error fetching video info:", error);
 
-    const errorMessage =
+    const message =
       error instanceof Error
         ? error.message
         : "Failed to fetch video info";
 
     return NextResponse.json(
-      { error: errorMessage },
+      { error: message },
       { status: 500 }
     );
   }
