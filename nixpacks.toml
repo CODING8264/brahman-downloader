@@ -1,9 +1,7 @@
 [phases.setup]
-# Install system packages
 aptPkgs = ["yt-dlp", "ffmpeg"]
 
 [phases.build]
-# Install dependencies, generate Prisma client, build Next.js
 commands = [
   "npm install",
   "npm run db:generate",
@@ -11,7 +9,6 @@ commands = [
 ]
 
 [phases.start]
-# Push database changes (optional) and start the server
 command = "npm run start"
 
 [metadata]
