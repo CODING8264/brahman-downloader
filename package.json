@@ -8,8 +8,8 @@
     "start": "node .next/standalone/server.js",
     "db:generate": "prisma generate",
     "migrate": "prisma migrate deploy",
+    "install-yt-dlp": "curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp && chmod +x ./yt-dlp",
     "postinstall": "npm run install-yt-dlp",
-  "install-yt-dlp": "curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ./yt-dlp && chmod +x ./yt-dlp",
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
