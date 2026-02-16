@@ -1,61 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import { downloadMedia } from "@/lib/ytdlp";
+import { NextRequest, NextResponse } from 'next/server';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
-export const dynamic = "force-dynamic";
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const { url, format } = body;
+    const { url, format } = await req.json();
 
-    // 1️⃣ Validate URL
     if (!url) {
-      return NextResponse.json(
-        { error: "URL is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'URL required' });
     }
 
-    try {
-      new URL(url);
-    } catch {
-      return NextResponse.json(
-        { error: "Invalid URL format" },
-        { status: 400 }
-      );
+    const downloadDir = path.join(process.cwd(), 'downloads');
+    if (!fs.existsSync(downloadDir)) {
+      fs.mkdirSync(downloadDir);
     }
 
-    // 2️⃣ Validate format
-    if (!format) {
-      return NextResponse.json(
-        { error: "Format is required" },
-        { status: 400 }
-      );
-    }
+    const output = path.join(downloadDir, '%(title)s.%(ext)s');
 
-    // 3️⃣ Start download via yt-dlp
-    const result = await downloadMedia({
-      url,
-      format,
-    });
+    const args =
+      format === 'mp3'
+        ? ['-x', '--audio-format', 'mp3', '-o', output, url]
+        : ['-f', 'best', '-o', output, url];
 
-    // 4️⃣ Return success
+    spawn('yt-dlp', args);
+
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
     return NextResponse.json({
-      success: true,
-      data: result,
+      success: false,
+      error: err.message || 'Download failed'
     });
-
-  } catch (error) {
-    console.error("Download error:", error);
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Download failed";
-
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
   }
 }
