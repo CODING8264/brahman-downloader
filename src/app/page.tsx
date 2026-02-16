@@ -527,4 +527,33 @@ export default function Home() {
       </Button>
     </div>
   </motion.div>
-))}
+</div>
+                  </ScrollArea>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="w-5 h-5" /> Settings
+                </CardTitle>
+                <CardDescription>
+                  Default download preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-sm text-muted-foreground">
+                  Settings are loaded automatically from server.
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+        </Tabs>
+      </main>
+    </div>
+  );
+}
