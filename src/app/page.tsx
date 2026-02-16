@@ -240,6 +240,27 @@ export default function Home() {
     return platformConfig[platform]?.color || platformConfig.default.color;
   };
 
+  const renderThumbnail = (download: DownloadItem) => {
+    if (download.thumbnail) {
+      return (
+        <img 
+          src={download.thumbnail} 
+          alt="" 
+          className="w-20 h-14 object-cover rounded" 
+        />
+      );
+    }
+    return (
+      <div className="w-20 h-14 bg-muted rounded flex items-center justify-center">
+        {download.format === 'mp3' ? (
+          <Music className="w-6 h-6 text-muted-foreground" />
+        ) : (
+          <Video className="w-6 h-6 text-muted-foreground" />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
       <Toaster position="top-center" richColors />
@@ -425,9 +446,9 @@ export default function Home() {
                   <div className="space-y-2">
                     <h4 className="font-semibold">Quick Tips</h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Auto-naming kicks in after 5 seconds if you don&apos;t enter a name</li>
-                      <li>• Download audio in MP3 format for music from any platform</li>
-                      <li>• Works with Instagram, TikTok, Spotify, and 1000+ sites</li>
+                      <li>Auto-naming kicks in after 5 seconds if you do not enter a name</li>
+                      <li>Download audio in MP3 format for music from any platform</li>
+                      <li>Works with Instagram, TikTok, Spotify, and 1000+ sites</li>
                     </ul>
                   </div>
                 </div>
@@ -463,11 +484,4 @@ export default function Home() {
                           key={download.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
-                        >
-                          <div className="relative">
-                            {download.thumbnail ? (
-                              <img src={download.thumbnail} alt="" className="w-20 h-14 object-cover rounded" />
-                            ) : (
-                              <div className="w-20 h-14 bg-muted rounded flex items-center justify-center">
-                                {download.format === 'mp3' ? <Music className="w-6 h-6 text-muted-foreground" /> : <Video className="w-6 h-6 text-muted
+                          className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg hover:bg-muted transi
