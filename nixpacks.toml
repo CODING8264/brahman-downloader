@@ -3,7 +3,7 @@ aptPkgs = ["yt-dlp", "ffmpeg"]
 
 [phases.build]
 commands = [
-  "npm install",
+  "npm install --include=dev",
   "npm run db:generate",
   "npm run build"
 ]
@@ -12,4 +12,4 @@ commands = [
 command = "npm run start"
 
 [metadata]
-publish = ".next/standalone" 
+publish = ".next/standalone"
