@@ -1,27 +1,28 @@
-# Use Node.js 20 as base image
+# 1. Use official Node.js LTS image
 FROM node:20
 
-# Set working directory
+# 2. Set working directory
 WORKDIR /app
 
-# Install yt-dlp binary globally
+# 3. Install yt-dlp globally
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
-    -o /usr/local/bin/yt-dlp && chmod +x /usr/local/bin/yt-dlp
+    -o /usr/local/bin/yt-dlp \
+    && chmod +x /usr/local/bin/yt-dlp
 
-# Copy package.json and package-lock.json (or just package.json)
+# 4. Copy package.json and package-lock.json (if exists)
 COPY package*.json ./
 
-# Install dependencies
+# 5. Install dependencies
 RUN npm install
 
-# Copy the rest of the project files
+# 6. Copy the rest of your project
 COPY . .
 
-# Build the Next.js app
+# 7. Build Next.js app
 RUN npm run build
 
-# Expose port Railway will use
+# 8. Expose the port Railway will use
 EXPOSE 8080
 
-# Start the standalone server
+# 9. Start server using the standalone output
 CMD ["node", ".next/standalone/server.js"]
