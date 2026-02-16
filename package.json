@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "scripts": {
+  "build": "next build",
+  "start": "node .next/standalone/server.js"
+}
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
   },
